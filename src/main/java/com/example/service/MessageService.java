@@ -41,6 +41,10 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
+    public List<Message> getAllMessagesByAccountId(int accountId) {
+        return messageRepository.findAllByAccountId(accountId);
+    }
+
     public Message getMessageById(int messageId) {
         return messageRepository.findById(messageId).orElse(null);
     }
