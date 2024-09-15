@@ -44,4 +44,19 @@ public class MessageService {
     public Message getMessageById(int messageId) {
         return messageRepository.findById(messageId).orElse(null);
     }
+
+    public Message updateMessageById(int messageId, Message replacement) throws BadHttpRequest {
+        Optional<Message> messageOptional = messageRepository.findById(messageId);
+
+        if (replacement.getMessageText().isEmpty() ||
+            replacement.getMessageText().length() > 255 ||
+            messageOptional.isEmpty()) 
+        {
+            throw new BadHttpRequest();
+        }
+
+        Message message = messageOptional.get();
+        message.setMessageText(replacement.getMessageText());
+        return messageRepository.save(message);            
+    }
 }
