@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -33,7 +34,29 @@ public class SocialMediaController {
     private AccountService accountService;
     @Autowired
     private MessageService messageService;
-    
+
+    @PostMapping("/messages")
+    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        try {
+            message = messageService.createMessage(message);
+        } catch (BadHttpRequest e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @GetMapping("/messages") 
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.status(HttpStatus.OK).body(messages);
+    }
+
+    @GetMapping("/messages/{messageId}")
+    public ResponseEntity<Message> getMessageById(@PathVariable int messageId) {
+        Message message = messageService.getMessageById(messageId);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+        
     @PostMapping("/login")
     public ResponseEntity<Account> login(@RequestBody Account account) {
         try {
@@ -44,22 +67,6 @@ public class SocialMediaController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(account);
-    }
-
-    @GetMapping("/messages") 
-    public ResponseEntity<List<Message>> getAllMessages() {
-        List<Message> messages = messageService.getAllMessages();
-        return ResponseEntity.status(HttpStatus.OK).body(messages);
-    }
-
-    @PostMapping("/messages")
-    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        try {
-            message = messageService.createMessage(message);
-        } catch (BadHttpRequest e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @PostMapping("/register")
