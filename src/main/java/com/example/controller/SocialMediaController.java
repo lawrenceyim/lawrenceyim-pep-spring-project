@@ -1,12 +1,14 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +45,15 @@ public class SocialMediaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @DeleteMapping("/messages/{messageId}")
+    public ResponseEntity<String> deleteMessageById(@PathVariable int messageId) {
+        Optional<Message> messageOptional = Optional.ofNullable(messageService.deleteMessageById(messageId));
+        if (messageOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body("1");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @GetMapping("/messages") 

@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class MessageService {
             throw new BadHttpRequest();
         }
         return messageRepository.save(message);
+    }
+
+    public Message deleteMessageById(int messageId) {
+        Optional<Message> messageOptional = messageRepository.findById(messageId);
+        if (messageOptional.isPresent()) {
+            messageRepository.delete(messageOptional.get());
+        }
+        return messageOptional.orElse(null);
     }
 
     public List<Message> getAllMessages() {
