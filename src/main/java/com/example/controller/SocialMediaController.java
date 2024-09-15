@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.util.List;
+
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,12 @@ public class SocialMediaController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(account);
+    }
+
+    @GetMapping("/messages") 
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
 
     @PostMapping("/messages")
