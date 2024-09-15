@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.entity.Account;
+import com.example.exception.AccountNotFoundException;
+import com.example.exception.PasswordMismatchException;
 import com.example.exception.UsernameAlreadyUsedException;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
@@ -28,6 +30,18 @@ public class SocialMediaController {
     @Autowired
     private MessageService messageService;
     
+    @PostMapping("/login")
+    public ResponseEntity<Account> login(@RequestBody Account account) {
+        try {
+            account = accountService.login(account);
+        } catch(AccountNotFoundException accountNotFoundException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(account);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Account> register(@RequestBody Account account) {
         try {
